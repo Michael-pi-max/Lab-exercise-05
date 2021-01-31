@@ -6,18 +6,19 @@ const taskList = document.querySelector('.collection'); //The UL
 const clearBtn = document.querySelector('.clear-tasks'); //the all task clear button
 const reloadIcon = document.querySelector('.fa'); //the reload button at the top navigation 
 
+const ascending = document.querySelector('.ascending');
+const descending = document.querySelector('.descending');
+
 // Add Event Listener  [Form , clearBtn and filter search input ]
 
-// form submit 
 form.addEventListener('submit', addNewTask);
-// Clear All Tasks
 clearBtn.addEventListener('click', clearAllTasks);
-//   Filter Task 
 filter.addEventListener('keyup', filterTasks);
-// Remove task event [event delegation]
 taskList.addEventListener('click', removeTask);
-// Event Listener for reload 
 reloadIcon.addEventListener('click', reloadPage);
+
+ascending.addEventListener('click', sortTasksAsc);
+// descending.addEventListener('click', sortTasksDesc);
 
 // Add New  Task Function definition 
 function addNewTask(e) {
@@ -26,21 +27,20 @@ function addNewTask(e) {
         taskInput.style.borderColor = "red";
         return;
     }
-    // Create an li element when the user adds a task 
     const li = document.createElement('li');
-    // Adding a class
+    const span = document.createElement('span');
     li.className = 'collection-item';
-    // Create text node and append it 
     li.appendChild(document.createTextNode(taskInput.value));
-    // Create new element for the link 
+    span.className = 'date-item';
+    span.style.display = 'none';
     const link = document.createElement('a');
-    // Add class and the x marker for a 
     link.className = 'delete-item secondary-content';
     link.innerHTML = '<i class="fa fa-remove"></i>';
-    // Append link to li
+    span.innerHTML = new Date();
     li.appendChild(link);
-    // Append to UL 
+    li.appendChild(span);
     taskList.appendChild(li);
+
 }
 
 // Clear Task Function definition 
@@ -59,6 +59,60 @@ function removeTask(e) {
     }
 }
 
+function sortTasksAsc(e){
+    // Grab a reference to the UL
+    var container = taskList;
+    // Gather all the LI's from the container
+    var contents = container.querySelectorAll("li");
+    var list = [];
+    for(var i=0; i<contents.length; i++){
+        list.push(contents[i]);
+    }
+    const dateList = list.map((lis) => {
+        return lis.children[1]
+    });
+    dateList.sort(function(a, b){
+        var aa = a.innerHTML;
+        var bb = b.innerHTML;
+        if(aa == bb){
+            return 0;
+        }
+        else{
+            return aa >bb ?-1:1;
+        }
+    });
+
+    // Shuffle the order based on the order of our list array.
+    for(var i=0; i<dateList.length; i++){
+        container.insertBefore(list[i], container.firstChild);
+}
+}
+
+// function sortTasksDesc(e){
+//     // Grab a reference to the UL
+//     var container = taskList;
+//     // Gather all the LI's from the container
+//     var contents = container.querySelectorAll("li");
+//     var list = [];
+//     for(var i=0; i<contents.length; i++){
+//         list.push(contents[i]);
+//     }
+//     const dateList = list.map((lis) => {
+//         return lis.children[1]
+//     });
+//     // Sort based on innerHTML (sorts "in place")
+//     dateList.sort(function(a, b){
+//         var aa = a.innerHTML;
+//         var bb = b.innerHTML;
+//         return aa < bb ? -1 : (aa > bb ? 1 : 0);
+//     });
+
+//     // Shuffle the order based on the order of our list array.
+//     for(var i=0; i<dateList.length; i++){
+//         container.insertBefore(list[i], container.firstChild);
+// }
+// }
+
 function filterTasks(e) {
     const inputText = e.target.value.toLowerCase();
     const tasks = Array.from(taskList.children);
@@ -73,9 +127,7 @@ function filterTasks(e) {
     console.log(Array.from(taskList.children).map((val) => val.innerHTML));
 };
 
-
 function reloadPage() {
-    //using the reload fun on location object 
     location.reload();
 }
 
