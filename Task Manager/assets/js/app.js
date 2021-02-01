@@ -18,7 +18,7 @@ taskList.addEventListener('click', removeTask);
 reloadIcon.addEventListener('click', reloadPage);
 
 ascending.addEventListener('click', sortTasksAsc);
-// descending.addEventListener('click', sortTasksDesc);
+descending.addEventListener('click', sortTasksDesc);
 
 // Add New  Task Function definition 
 function addNewTask(e) {
@@ -41,6 +41,8 @@ function addNewTask(e) {
     li.appendChild(span);
     taskList.appendChild(li);
 
+    taskInput.value = '';
+
 }
 
 // Clear Task Function definition 
@@ -60,58 +62,26 @@ function removeTask(e) {
 }
 
 function sortTasksAsc(e){
-    // Grab a reference to the UL
     var container = taskList;
-    // Gather all the LI's from the container
-    var contents = container.querySelectorAll("li");
-    var list = [];
-    for(var i=0; i<contents.length; i++){
-        list.push(contents[i]);
-    }
-    const dateList = list.map((lis) => {
-        return lis.children[1]
-    });
-    dateList.sort(function(a, b){
-        var aa = a.innerHTML;
-        var bb = b.innerHTML;
-        if(aa == bb){
-            return 0;
-        }
-        else{
-            return aa >bb ?-1:1;
-        }
-    });
-
-    // Shuffle the order based on the order of our list array.
-    for(var i=0; i<dateList.length; i++){
-        container.insertBefore(list[i], container.firstChild);
-}
+    const content = Array.from(container.querySelectorAll("LI"));
+    content.sort(function(a,b){
+        let aa = a.children[1].textContent;
+        let bb = b.children[1].textContent;
+        return aa < bb ? -1 : (aa > bb ? 1 : 0);
+        //return a.textContent.localeCompare(b.textContent)
+    }).forEach(li => container.appendChild(li));       
 }
 
-// function sortTasksDesc(e){
-//     // Grab a reference to the UL
-//     var container = taskList;
-//     // Gather all the LI's from the container
-//     var contents = container.querySelectorAll("li");
-//     var list = [];
-//     for(var i=0; i<contents.length; i++){
-//         list.push(contents[i]);
-//     }
-//     const dateList = list.map((lis) => {
-//         return lis.children[1]
-//     });
-//     // Sort based on innerHTML (sorts "in place")
-//     dateList.sort(function(a, b){
-//         var aa = a.innerHTML;
-//         var bb = b.innerHTML;
-//         return aa < bb ? -1 : (aa > bb ? 1 : 0);
-//     });
-
-//     // Shuffle the order based on the order of our list array.
-//     for(var i=0; i<dateList.length; i++){
-//         container.insertBefore(list[i], container.firstChild);
-// }
-// }
+function sortTasksDesc(e){
+    var container = taskList;
+    const content = Array.from(container.querySelectorAll("LI"));
+    content.sort(function(a,b){
+        let aa = a.children[1].textContent;
+        let bb = b.children[1].textContent;
+        return aa > bb ? -1 : (aa < bb ? 1 : 0);
+        //return a.textContent.localeCompare(b.textContent)
+    }).forEach(li => container.appendChild(li));    
+}
 
 function filterTasks(e) {
     const inputText = e.target.value.toLowerCase();
