@@ -68,7 +68,6 @@ function sortTasksAsc(e){
         let aa = a.children[1].textContent;
         let bb = b.children[1].textContent;
         return aa < bb ? -1 : (aa > bb ? 1 : 0);
-        //return a.textContent.localeCompare(b.textContent)
     }).forEach(li => container.appendChild(li));       
 }
 
@@ -79,7 +78,6 @@ function sortTasksDesc(e){
         let aa = a.children[1].textContent;
         let bb = b.children[1].textContent;
         return aa > bb ? -1 : (aa < bb ? 1 : 0);
-        //return a.textContent.localeCompare(b.textContent)
     }).forEach(li => container.appendChild(li));    
 }
 
